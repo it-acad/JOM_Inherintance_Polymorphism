@@ -140,7 +140,7 @@ public class Task5Test {
     }
 
     private static Stream<Arguments> listPrivateFields() {
-        return Stream.of(Arguments.of("Rectang", "height"), Arguments.of("Rectang", "wigth"));
+        return Stream.of(Arguments.of("Rectang", "height"), Arguments.of("Rectang", "width"));
     }
 
     @DisplayName("Check rectangle perimeter")
