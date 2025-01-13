@@ -34,10 +34,8 @@ public class Shape {
 ---
 Please create class Shape with abstract method to calculate area of figure and field name. 
 
-
 ---
 Replace code in method getArea() according to principles of polymorphism i.e. 
-
 
 ---
 Circle and Rectangle classes extends Shape class and override double getArea() method. 

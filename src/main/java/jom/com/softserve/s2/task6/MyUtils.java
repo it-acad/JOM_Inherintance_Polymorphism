@@ -4,7 +4,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MyUtils {
+    public List<Shape> maxAreas(List<Shape> shapes) {
+        return Collections.emptyList();
+        // Code
+    }
 
-    //Write your code here
 
 }

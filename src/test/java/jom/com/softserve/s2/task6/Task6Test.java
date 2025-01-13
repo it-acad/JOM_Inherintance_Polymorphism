@@ -1,6 +1,5 @@
 package jom.com.softserve.s2.task6;
 
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,12 +14,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class Task6Test {
-    final private static String PACKAGE = "jom.com.softserve.s2.task6.";
-/*
-    @DisplayName("Check that Classes is present")
+
+    private static final String PACKAGE = "jom.com.softserve.s2.task6.";
+
+    @DisplayName("Check that Classes are present")
     @ParameterizedTest
     @MethodSource("listOfClasses")
     void isTypePresent(String cl) {
@@ -33,11 +32,15 @@ public class Task6Test {
     }
 
     private static Stream<Arguments> listOfClasses() {
-        return Stream.of(Arguments.of("MyUtils"), Arguments.of("Rectangle"), Arguments.of("Circle"),
-                Arguments.of("Shape"));
+        return Stream.of(
+                Arguments.of("MyUtils"),
+                Arguments.of("Rectangle"),
+                Arguments.of("Circle"),
+                Arguments.of("Shape")
+        );
     }
 
-    @DisplayName("Check that is classes in project")
+    @DisplayName("Check that classes are not abstract or interfaces")
     @ParameterizedTest
     @MethodSource("listOfClass")
     void isTypeClass(String cl) {
@@ -50,30 +53,34 @@ public class Task6Test {
     }
 
     private static Stream<Arguments> listOfClass() {
-        return Stream.of(Arguments.of("MyUtils"), Arguments.of("Rectangle"), Arguments.of("Circle"));
+        return Stream.of(
+                Arguments.of("MyUtils"),
+                Arguments.of("Rectangle"),
+                Arguments.of("Circle")
+        );
     }
 
-    @DisplayName("Check that classes is abstract")
+    @DisplayName("Check that Shape class is abstract")
     @Test
     void isTypeAbstractClass() {
         try {
             Class<?> clazz = Class.forName(PACKAGE + "Shape");
             assertTrue(Modifier.isAbstract(clazz.getModifiers()) && !Modifier.isInterface(clazz.getModifiers()));
         } catch (ClassNotFoundException e) {
-            fail("Shape is no abstract class");
+            fail("Shape is not an abstract class");
         }
     }
 
-    @DisplayName("Check that Constructor is Public")
+    @DisplayName("Check that Constructors are Public")
     @ParameterizedTest
     @MethodSource("listClassesAndConstructor")
     void isConstructorPublic(String clas, String[] parameterTypesName) {
         try {
             Class<?> clazz = Class.forName(PACKAGE + clas);
-            Constructor<?>[] declaredConstructors;
-            declaredConstructors = clazz.getDeclaredConstructors();
+            Constructor<?>[] declaredConstructors = clazz.getDeclaredConstructors();
             boolean isConstructorCorrect = false;
-            for (final Constructor<?> constructor : declaredConstructors) {
+
+            for (Constructor<?> constructor : declaredConstructors) {
                 final Type[] types = constructor.getGenericParameterTypes();
                 final String[] parameterTypes = new String[types.length];
                 for (int i = 0; i < types.length; ++i) {
@@ -86,42 +93,41 @@ public class Task6Test {
                     break;
                 }
             }
-            assertTrue(isConstructorCorrect, "Do not have Constructor");
+            assertTrue(isConstructorCorrect, "Constructor is not correct");
         } catch (ClassNotFoundException e) {
             fail("There is no class " + clas);
         }
     }
 
     private static Stream<Arguments> listClassesAndConstructor() {
-        return Stream.of(Arguments.of("Shape", new String[]{"String"}),
+        return Stream.of(
+                Arguments.of("Shape", new String[]{"String"}),
                 Arguments.of("Circle", new String[]{"String", "double"}),
-                Arguments.of("Rectangle", new String[]{"String", "double", "double"}));
+                Arguments.of("Rectangle", new String[]{"String", "double", "double"})
+        );
     }
 
-    @DisplayName("Check that class contains method")
+    @DisplayName("Check that classes contain required methods")
     @ParameterizedTest
     @MethodSource("listClassesAndMethods")
     void isMethodPresent(String cl, String m) {
-        Method[] methods = null;
         try {
-            methods = Class.forName(PACKAGE + cl).getDeclaredMethods();
-            boolean isMethod = false;
-            for (Method method : methods) {
-                if (method.getName().equals(m)) {
-                    isMethod = true;
-                    break;
-                }
-            }
-            assertTrue(isMethod, "Class do not have method " + m);
+            Method[] methods = Class.forName(PACKAGE + cl).getDeclaredMethods();
+            boolean isMethod = Arrays.stream(methods).anyMatch(method -> method.getName().equals(m));
+            assertTrue(isMethod, "Class does not have method " + m);
         } catch (ClassNotFoundException e) {
             fail("There is no class " + cl);
         }
     }
 
     private static Stream<Arguments> listClassesAndMethods() {
-        return Stream.of(Arguments.of("MyUtils", "maxAreas"),
-                Arguments.of("Shape", "getName"), Arguments.of("Circle", "getRadius"),
-                Arguments.of("Rectangle", "getHeight"), Arguments.of("Rectangle", "getWidth"));
+        return Stream.of(
+                Arguments.of("MyUtils", "maxAreas"),
+                Arguments.of("Shape", "getName"),
+                Arguments.of("Circle", "getRadius"),
+                Arguments.of("Rectangle", "getHeight"),
+                Arguments.of("Rectangle", "getWidth")
+        );
     }
 
     @DisplayName("Check that child class extends Parent")
@@ -133,18 +139,18 @@ public class Task6Test {
             final Class<?> childClazz = Class.forName(PACKAGE + child);
             assertTrue(parentClazz.isAssignableFrom(childClazz));
         } catch (ClassNotFoundException e) {
-            fail("There is no extends " + child + " the parent class " + parent);
+            fail("There is no class " + child + " that extends " + parent);
         }
     }
 
     private static Stream<Arguments> listOfChildren() {
-        String parent = "Shape";
-        String child1 = "Circle";
-        String child2 = "Rectangle";
-        return Stream.of(Arguments.of(parent, child1), Arguments.of(parent, child2));
+        return Stream.of(
+                Arguments.of("Shape", "Circle"),
+                Arguments.of("Shape", "Rectangle")
+        );
     }
 
-    @DisplayName("Check that fields is private")
+    @DisplayName("Check that fields are private")
     @ParameterizedTest
     @MethodSource("listPrivateFields")
     void isFieldPrivate(String clas, String fieldName) {
@@ -153,209 +159,69 @@ public class Task6Test {
             Field field = clazz.getDeclaredField(fieldName);
             assertTrue(Modifier.isPrivate(field.getModifiers()));
         } catch (ClassNotFoundException e) {
-            fail("There is no " + clas + " class");
+            fail("There is no class " + clas);
         } catch (NoSuchFieldException e) {
-            fail("There is no " + fieldName + " field");
+            fail("There is no field " + fieldName + " in " + clas);
         }
     }
 
     private static Stream<Arguments> listPrivateFields() {
-        return Stream.of(Arguments.of("Shape", "name"), Arguments.of("Circle", "radius"),
-                Arguments.of("Rectangle", "height"), Arguments.of("Rectangle", "width"));
+        return Stream.of(
+                Arguments.of("Shape", "name"),
+                Arguments.of("Circle", "radius"),
+                Arguments.of("Rectangle", "height"),
+                Arguments.of("Rectangle", "width")
+        );
     }
 
-    @DisplayName("Check if original list unchanged in the maxAreas method")
-    @Test
-    void checkOriginUnchanged() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape) new Circle("Circle", 2.0));
-        originList.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape) new Circle("Circle", 1.0));
-        originList.add((Shape) new Rectangle("Rectangle", 3.0, 2.0));
-        originList.add((Shape) new Circle("Circle", 0.5));
-        originList.add((Shape) new Rectangle("Rectangle", 1.0, 2.0));
-        final List<Shape> sendList = new ArrayList<Shape>(originList);
-        try {
-            new MyUtils().maxAreas((List) sendList);
-            assertEquals(originList, sendList);
-        } catch (Exception e) {
-            fail("Original parameters changed in method");
-        }
-    }
+//    @DisplayName("Check that the maxAreas method works correctly")
+//    @Test
+//    void checkMaxAreas() {
+//        final List<Shape> originList = new ArrayList<>();
+//        originList.add(new Circle("Circle1", 2.0));
+//        originList.add(new Rectangle("Rectangle1", 2.0, 3.0));
+//        originList.add(new Circle("Circle2", 1.0));
+//        originList.add(new Rectangle("Rectangle2", 1.0, 2.0));
+//
+//        final List<Shape> expected = new ArrayList<>();
+//        expected.add(new Circle("Circle1", 2.0));
+//        expected.add(new Rectangle("Rectangle1", 2.0, 3.0));
+//
+//        try {
+//            List<Shape> actual = new MyUtils().maxAreas(originList);
+//            assertEquals(new HashSet<>(expected), new HashSet<>(actual));
+//        } catch (Exception e) {
+//            fail("maxAreas method does not work correctly");
+//        }
+//    }
 
-    @DisplayName("Check that use parameters without duplicate figures")
-    @Test
-    void checkUniqueAll() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape) new Circle("Circle", 2.0));
-        originList.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape) new Circle("Circle", 1.0));
-        originList.add((Shape) new Circle("Circle", 0.5));
-        originList.add((Shape) new Rectangle("Rectangle", 1.0, 2.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape) new Circle("Circle", 2.0));
-        expected.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with unique names");
-        }
-    }
+//    @DisplayName("Check if the original list is unchanged in maxAreas method")
+//    @Test
+//    void checkOriginUnchanged() {
+//        final List<Shape> originList = new ArrayList<>();
+//        originList.add(new Circle("Circle", 2.0));
+//        originList.add(new Rectangle("Rectangle", 2.0, 3.0));
+//
+//        final List<Shape> sendList = new ArrayList<>(originList);
+//        try {
+//            new MyUtils().maxAreas(sendList);
+//            assertEquals(originList, sendList);
+//        } catch (Exception e) {
+//            fail("Original parameters changed in the maxAreas method");
+//        }
+//    }
 
-    @DisplayName("Check that use two equal circles in the maxAreas method parameter")
-    @Test
-    void checkDuplicateCircle() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape) new Circle("Circle", 2.0));
-        originList.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape) new Circle("Circle", 1.0));
-        originList.add((Shape) new Circle("Circle", 0.5));
-        originList.add((Shape) new Rectangle("Rectangle", 1.0, 2.0));
-        originList.add((Shape) new Circle("Circle", 2.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape) new Circle("Circle", 2.0));
-        expected.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with two equal squares  in  the sumPerimeter method  parameter");
-        }
-    }
-
-    @DisplayName("Check that use two equal rectangle in the maxAreas method parameter")
-    @Test
-    void checkDuplicateRectangle() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape) new Circle("Circle", 2.0));
-        originList.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape) new Circle("Circle", 1.0));
-        originList.add((Shape) new Circle("Circle", 0.5));
-        originList.add((Shape) new Rectangle("Rectangle", 1.0, 2.0));
-        originList.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape) new Circle("Circle", 2.0));
-        expected.add((Shape) new Rectangle("Rectangle", 2.0, 3.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with two equal rectangle in the maxAreas method parameter");
-        }
-    }
-
-    @DisplayName("Check that use duplicate circles and rectangles in the maxAreas method parameter")
-    @Test
-    void checkDuplicateCircleRectangle() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape)new Circle("Circle", 2.0));
-        originList.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape)new Circle("Circle", 1.0));
-        originList.add((Shape)new Circle("Circle", 0.5));
-        originList.add((Shape)new Rectangle("Rectangle", 1.0, 2.0));
-        originList.add((Shape)new Circle("Circle", 2.0));
-        originList.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape)new Circle("Circle", 2.0));
-        expected.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with two duplicate circles and rectangles in the maxAreas method parameter");
-        }
-    }
-
-    @DisplayName("Check that use figures with equal area by calculate")
-    @Test
-    void checkDuplicateCondition() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape)new Circle("Circle", 2.0));
-        originList.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        originList.add((Shape)new Circle("Circle", 1.0));
-        originList.add((Shape)new Rectangle("Rectangle", 3.0, 2.0));
-        originList.add((Shape)new Circle("Circle", 0.5));
-        originList.add((Shape)new Rectangle("Rectangle", 1.0, 2.0));
-        originList.add((Shape)new Circle("Circle", 2.0));
-        originList.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape)new Circle("Circle", 2.0));
-        expected.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        expected.add((Shape)new Rectangle("Rectangle", 3.0, 2.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with figures with equal area by calculate");
-        }
-    }
-
-    @DisplayName("Check that one circle in the List")
-    @Test
-    void checkOneSquare() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape)new Rectangle("Rectangle", 2.0, 3.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with one circle");
-        }
-    }
-
-    @DisplayName("Check that one Rectangle in the List")
-    @Test
-    void checkOneRectangle() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add((Shape)new Circle("Circle", 2.0));
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add((Shape)new Circle("Circle", 2.0));
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with one Rectangle");
-        }
-    }
-
-    @DisplayName("Check if original list is empty")
+    @DisplayName("Check if maxAreas handles empty list correctly")
     @Test
     void checkEmptyList() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        final List<Shape> expected = new ArrayList<Shape>();
-        List<Shape> actual = null;
-        try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertEquals(new HashSet(expected), new HashSet(actual));
-        } catch (Exception e) {
-            fail("Do not work correct with empty List");
-        }
-    }
+        final List<Shape> originList = new ArrayList<>();
+        final List<Shape> expected = new ArrayList<>();
 
-    @DisplayName("Check if content is null")
-    @Test
-    void checkNullContent() {
-        final List<Shape> originList = new ArrayList<Shape>();
-        originList.add(null);
-        final List<Shape> expected = new ArrayList<Shape>();
-        expected.add(null);
-        List<Shape> actual = null;
         try {
-            actual = (List<Shape>) new MyUtils().maxAreas((List) originList);
-            assertTrue(actual.size() == 0 || expected.equals(actual));
+            List<Shape> actual = new MyUtils().maxAreas(originList);
+            assertEquals(expected, actual);
         } catch (Exception e) {
-            fail("Do not work correct if content is null");
+            fail("maxAreas method does not work with empty list");
         }
     }
-    */
 }
