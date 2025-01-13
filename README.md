@@ -1,31 +1,21 @@
 ## Task 2
-* Create interface DrinkReceipt with methods String getName() 
-and DrinkReceipt addComponent(String componentName, int componentCount). 
+Create the following interfaces and classes:
+* **interface DrinkRecipe** with methods: String getName() and DrinkRecipe addComponent(String componentName, int componentCount).
 
-* Create interface DrinkPreparation with method Map<String, Integer> makeDrink() 
-to return a drink components. 
+* **interface DrinkPreparation** with method Map<String, Integer> makeDrink() - returns the drink components.
 
-* Create interface Rating with method int getRating().
-
----
-* Class Coffee contains fields String name, int rating, Map of ingredients 
-and implements interfaces DrinkReceipt, DrinkPreparation and Rating. 
+* **interface Rating** with method int getRating().
 
 ---
-* Method makeDrink() prepare coffee with typically components: {Water=100, Arabica=20}. 
-Espresso and Cappuccino classes extends the Coffee Class 
-and override method makeDrink(). 
+* Class Coffee contains fields String name, int rating, Map<String,Integer> ingredients and implements interfaces DrinkRecipe, DrinkPreparation and Rating.
+  Method makeDrink() prepares coffee with typically components: {Water=100, Arabica=20}.
+* **Espresso** and **Cappuccino** classes extends the Coffee class and override method makeDrink(). Espresso coffee has 50 g. of Water. Cappuccino coffee has an additional 50 g. of Milk.
 
 ---
-Espresso coffee has 50 g. of Water. 
-Cappuccino caffee has an additional of 50 g. of Milk.
+* Method **averageRating(List<Coffee> coffeeList)** of the MyUtils class returns a Map with coffee name as key and average coffee rating as value.
 
 ---
-* Create a averageRating() method of the MyUtils class to return a Map 
-with coffee name as key and coffee average rating as value.
-
----
-For example, for a given list
+For example, for a given list:
 
 ---
 * [Espresso [name=Espresso, rating=8], 
