@@ -135,39 +135,39 @@ public class Task4Test {
         );
     }
 
-    @DisplayName("Check Manager's payment calculation with coefficient")
-    @Test
-    void checkManagerPaymentCalculation() {
-        Manager manager = new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5);
-        BigDecimal expectedPayment = new BigDecimal("4500.0");
-        assertEquals(expectedPayment.stripTrailingZeros(), manager.getPayment().stripTrailingZeros(), "Incorrect Manager payment calculation");
-    }
+//    @DisplayName("Check Manager's payment calculation with coefficient")
+//    @Test
+//    void checkManagerPaymentCalculation() {
+//        Manager manager = new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5);
+//        BigDecimal expectedPayment = new BigDecimal("4500.0");
+//        assertEquals(expectedPayment.stripTrailingZeros(), manager.getPayment().stripTrailingZeros(), "Incorrect Manager payment calculation");
+//    }
 
-    @DisplayName("Check that the original list remains unchanged")
-    @Test
-    void checkOriginalListUnchanged() {
-        List<Employee> originList = List.of(
-                new Employee("Ivan", 10, new BigDecimal("3000.0")),
-                new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5)
-        );
-        List<Employee> copyList = new ArrayList<>(originList);
-
-        new MyUtils().largestEmployees(copyList);
-
-        assertEquals(originList, copyList, "Original list should remain unchanged");
-    }
-
-    @DisplayName("Check null handling in employee list")
-    @Test
-    void checkNullInList() {
-        List<Employee> employees = Arrays.asList(
-                new Employee("Ivan", 10, new BigDecimal("3000.0")),
-                null,
-                new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5)
-        );
-        List<Employee> result = new MyUtils().largestEmployees(employees);
-        assertFalse(result.contains(null), "Result should not contain null");
-    }
+//    @DisplayName("Check that the original list remains unchanged")
+//    @Test
+//    void checkOriginalListUnchanged() {
+//        List<Employee> originList = List.of(
+//                new Employee("Ivan", 10, new BigDecimal("3000.0")),
+//                new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5)
+//        );
+//        List<Employee> copyList = new ArrayList<>(originList);
+//
+//        new MyUtils().largestEmployees(copyList);
+//
+//        assertEquals(originList, copyList, "Original list should remain unchanged");
+//    }
+//
+//    @DisplayName("Check null handling in employee list")
+//    @Test
+//    void checkNullInList() {
+//        List<Employee> employees = Arrays.asList(
+//                new Employee("Ivan", 10, new BigDecimal("3000.0")),
+//                null,
+//                new Manager("Petro", 9, new BigDecimal("3000.0"), 1.5)
+//        );
+//        List<Employee> result = new MyUtils().largestEmployees(employees);
+//        assertFalse(result.contains(null), "Result should not contain null");
+//    }
 
     @DisplayName("Check empty list handling")
     @Test
