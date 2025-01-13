@@ -15,7 +15,7 @@ All classes have getters to return fields.
 Create a maxDuration() method of the MyUtils class to return a list of Students 
 with maximum duration of study and Workers with maximum experience.
 ---
-For example, for a given list
+For example, for a given list:
 
 * [Person [name=Ivan], 
 * Student [name=Petro, studyPlace=University, studyYears=3], 
